@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+//Bubble Sort
 void sort(int *arr, int n) {
     int temp, i, j;
     for (i = 0; i < n - 1; i++) {
