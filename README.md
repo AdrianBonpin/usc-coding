@@ -1,2 +1,2 @@
 # usc-coding
-Coding sht for school
+Lenovo Branch
