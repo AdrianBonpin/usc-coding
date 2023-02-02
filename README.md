@@ -1,2 +1,2 @@
 # usc-coding
-Coding sht for school
+Main branch is managed by Mac VS Code
