@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 int* populate(){
     int *arr = malloc (sizeof(int) * 5);
     printf("Input 5 numbers:\n");
@@ -9,7 +8,6 @@ int* populate(){
     }
     return arr;
 }
-
 void swap(int arr[],int count){
     int sm = *(arr+count), pos = count;
     for(int x = count ; x < 5 ; x++){
@@ -23,7 +21,6 @@ void swap(int arr[],int count){
         *(arr+count) = sm;
     }
 }
-
 int main(){
     int *x;
     x = populate();
