@@ -1,3 +1,28 @@
+*{
+    margin: 0%;
+    font-family:: sans-serif;
+}
+.nvbr{
+    margin-top: 4px;
+    margin-bottom: 4px;
+}
 .nvlnk{
-    padding: 3px;
+    font-size: 16px;
+    font-weight:bold;
+}
+.google{
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+}
+.search{
+    margin-top: 5%;
+    display: flex;
+    justify-content: center;
+}
+.radio{
+    margin-top: 1%;
+    display: flex;
+    justify-content: center;
+    font-size: smaller;
 }
