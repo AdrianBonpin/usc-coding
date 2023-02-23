@@ -1,0 +1,257 @@
+/*
+3 Fonts to be used
+Oranienbaum                             |   font-family: 'Oranienbaum', serif;
+Open Sans - TT Norms Substitute         |   font-family: 'Open Sans', sans-serif;
+Spectral - The Seasons Light Substitute |   font-family: 'Spectral', serif;
+*/
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&family=Oranienbaum&family=Spectral:wght@200;300&display=swap'); 
+
+*{
+    font-size: 1rem;
+    font-family: 'Open Sans', sans-serif;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+body{
+    background-color: #eee9e3;
+}
+
+.main_nav{
+    padding: 2rem;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.nav_links li a:hover{
+    transition: .5s;
+    opacity: 60%;
+}
+
+.title{
+    display: flex;
+}
+
+.title div{
+    display: flex;
+    flex-direction: column;
+}
+
+.title1{
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 900;
+    font-size: .9rem;
+    padding-top: .1rem;
+    padding-right: .2rem;
+}
+
+.title2{
+    font-family: 'Spectral', serif;
+    font-weight: 500;
+}
+
+.nav_links{
+    display: flex;
+}
+
+.nav_links li{
+    width: 9rem;
+}
+
+.nav_links li a{
+    transition: .3s;
+    padding: 0rem 3rem 0rem 3rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: black;
+}
+
+.contact_button{
+    transition: .3s;
+    width: 7rem;
+    height: 2.5rem;
+    border-radius: 20px;
+    font-weight: 600;
+    background-color: #eee9e3d9;
+}
+
+.contact_button:hover{
+    transition: .3s;
+    color: #eee9e3;
+    background-color: black;
+    border-color: #eee9e3;
+}
+
+.main_body{
+    padding-top: 0rem;
+    display: flex;
+}
+
+.left_box{
+    width: 35%;
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.left_box h1{
+    padding-left: 9rem;
+    margin: 0;
+    font-size: 7rem;
+    font-family: 'Oranienbaum', serif;
+    font-weight: 500;
+    color: #514c49;
+}
+
+.right_box{
+    padding-left: 5rem;
+    width: 65%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.img1{
+    height: 322px;
+    border-radius: 0px 30px 0px 0px;
+    border-style:solid;
+    border-width: 2px;
+    border-color: #514c49;
+}
+
+.column1{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.img2{
+    width: 300px;
+    border-radius: 30px;
+    border-style:solid;
+    border-width: 2px;
+    border-color: #514c49;
+}
+
+.column1 div{
+    width: 300px;
+}
+
+.column1 div h4{
+    font-size: 1.5rem;
+    font-weight: 300;
+    font-family: 'Oranienbaum', serif;
+    color: #514c49;
+}
+.column1 div h5{
+    font-size: 1rem;
+    font-weight: 500;
+    color: #514c49;
+}
+.column1 div a{
+    padding-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #514c49;
+}
+
+.crow2{padding-top: 1rem;
+    padding-left: 1rem;
+}
+
+.img3{
+    transition: 1s;
+    width: 280px;
+    border-radius: 30px;
+}
+
+.img3:hover{
+    transition: 1s;
+    border-radius: 15px;
+}
+
+.column2{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.column2 h4{
+    width: 300px;
+    font-size: 2rem;
+    font-weight: 300;
+    font-family: 'Oranienbaum', serif;
+    color: #514c49;
+}
+.column2 h5{
+    font-size: 1rem;
+    font-weight: 500;
+    color: #514c49;
+}
+.column2 a{
+    padding-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #514c49;
+}
+
+.img4{
+    width: 280px;
+    border-radius: 30px;
+    border-style:solid;
+    border-width: 2px;
+    border-color: #514c49;
+}
+
+.header2{
+    display: flex;
+    background-image:url(src/header.jpg);
+    min-height: 150px;
+    justify-content: center;
+    align-items: center;
+}
+
+.main_nav2{
+    width: 90%;
+    height: 80%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #eee9e3d9;
+    padding: 2rem;
+    border-radius: 15px;
+}
+
+.current{
+    background-color: rgba(0, 0, 0, 0.233);
+    border-radius: 15px;
+}
+
+.about_us_body{
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.about_us_elements{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    margin-top: 5rem;
+    width: 26rem;
+    height: 28rem;
+    background-color: #ffffff9d;
+    border-radius: 15px;
+}
+
+.about_us_elements img, .about_us_elements h1{
+    padding: 2rem;
+    font-family: 'Oranienbaum', serif;
+    font-size: 2rem;
+}
+
+.about_us_elements img{
+    width: 300px;
+    height: inherit;
+}
