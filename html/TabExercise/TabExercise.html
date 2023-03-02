@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Tab Exercise</title>
+<style>    
+    .tab {
+      overflow: hidden;
+      border: 1px solid white;
+      background-color: lightgray;
+    }
+    
+    .tabButton {
+      background-color: inherit;
+      float: left;
+      border: none;
+      outline: none;
+      padding: 14px 16px;
+      font-size: 17px;
+    }
+    
+    .tabButton:hover {
+      background-color: gray;
+    }
+    
+    .active {
+      background-color: gray;
+      color: white;
+    }
+    
+    .tabcontent {
+      display: none;
+      padding: 6px 12px;
+      border-top: none;
+    }
+    </style>
+</head>
+<body>
+    <div class="tab">
+      <button id="tab1" class="tabButton active" onclick="activateTab('t1')">Tab 1</button>
+      <button id="tab2" class="tabButton" onclick="activateTab('t2')">Tab 2</button>
+      <button id="tab3" class="tabButton" onclick="activateTab('t3')">Tab 3</button>
+    </div>
+    
+    <div id="tabb1" class="tabcontent" style="display: block;">
+      <h3>Tab 1 Content</h3>
+      <p>This is the content of tab 1</p>
+    </div>
+    
+    <div id="tabb2" class="tabcontent">
+      <h3>Tab 2 Content</h3>
+      <p>This is the content of tab 2</p>
+    </div>
+    
+    <div id="tabb3" class="tabcontent">
+      <h3>Tab 3 Content</h3>
+      <p>This is the content of tab 3</p>
+    </div>
+    
+    <script>
+    function activateTab(tsend) {
+      var tab1 = document.getElementById("tab1");
+      var tab2 = document.getElementById("tab2");
+      var tab3 = document.getElementById("tab3");
+      
+      var tabb1 = document.getElementById("tabb1");
+      var tabb2 = document.getElementById("tabb2");
+      var tabb3 = document.getElementById("tabb3");
+      if(tsend === 't1'){
+        tab1.className = "tabButton active";
+        tab2.className = "tabButton";
+        tab3.className = "tabButton";
+
+        tabb1.style.display = "block";
+        tabb2.style.display = "none";
+        tabb3.style.display = "none";
+      }else if(tsend === 't2'){
+        tab1.className="tabButton";
+        tab2.className="tabButton active";
+        tab3.className="tabButton";
+
+        tabb1.style.display = "none";
+        tabb2.style.display = "block";
+        tabb3.style.display = "none";
+      }else{
+        tab1.className="tabButton";
+        tab2.className="tabButton";
+        tab3.className="tabButton active";
+
+        tabb1.style.display = "none";
+        tabb2.style.display = "none";
+        tabb3.style.display = "block";
+      }
+    }
+    </script>
+    </body>
+</html>
