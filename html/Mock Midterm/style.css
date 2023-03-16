@@ -1,0 +1,65 @@
+*{
+    margin: 0px;
+    padding: 0px;
+    font-family: sans-serif;
+}
+
+.tab {
+    overflow: hidden;
+    background-color: rgb(29, 29, 29);
+}
+
+.tabButton {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    padding: 14px 16px;
+    font-size: 17px;
+    color: white;
+}
+
+.tabButton:hover {
+    background-color: black;
+}
+
+.active {
+    color: yellow;
+}
+
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border-top: none;
+}
+
+h1 {
+    padding: 20px;
+}
+
+.newcont {
+    display: flex;
+    flex-direction: row;
+}
+
+.block {
+    width: 25%;
+}
+
+.block * {
+    padding: 5px;
+}
+
+.block blockquote {
+    text-align: justify;
+}
+
+.footer {
+    padding: 40px;
+    font-style: normal;
+    font-weight: 300;
+}
+
+.block ul {
+    padding-left: 40px;
+}
