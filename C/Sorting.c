@@ -1,9 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+void display(int arr[],int size){
+    int x;
+    for (x = 0 ; x < size ; x++){
+        printf("%d ",*(arr+x));
+    }
+    printf("\n");
+}
 void bubble(int arr[],int size){
     int temp, flag, x;
     do{
         flag=0;
+        display(arr,size);
+        printf("\n");
         for(x = 0 ; x < (size-1) ; x++){
             if(*(arr+x) > *(arr+(x+1))){
                 flag = 1;
@@ -14,49 +23,32 @@ void bubble(int arr[],int size){
         }
     }while(flag == 1);
 }
-void quick(int arr[], int size){ //Unfinished
-    int *arr2 = malloc(size*sizeof(int)) , x,b,s;
-    //Sort less than pivot
-    for( x = 0 , s = 0; x < size-1 ; x++){
-        if(*(arr+(size-1)) > *(arr+x)){
-            *(arr2+s) = *(arr+x);
-            s++;
+void insertion(int arr[], int size){
+    int x, y, temp;
+    for( x = 1 ; x < size ; x++){
+        temp = *(arr+x);
+        for( y = x - 1 ; y >= 0 && *(arr+y) > temp ; y--){
+            *(arr+(y+1)) = *(arr+y);
         }
+        *(arr+(y+1)) = temp;
     }
-    *(arr2+s) = *(arr+x);
-    display(arr2,size);
-    printf("\n");
-    //Sort greater than pivot
-    for( x = 0 , b = s + 1; x < size-1 ; x++){
-        if(*(arr+(size-1)) <= *(arr+x)){
-            *(arr2+b) = *(arr+x);
-            b++;
-        }
-    }
-    display(arr2,size);
-    printf("\n");
 }
 void selection(int arr[], int size){
     int x, y, min, temp;
     for( y = 0 ; y < size - 1 ; y++){
         min = y;
-        for( x = y ; x < size ; x++){
-            if( min > *(arr+x) ){
+        for( x = y + 1 ; x < size ; x++){
+            if( *(arr+x) < *(arr+min) ){
                 min = x;
             }
         }
-        temp = *(arr+min);
+        temp = *(arr+y);
         *(arr+y) = *(arr+min);
         *(arr+min) = temp;
+        display(arr,size);
     }
 }
-void display(int arr[],int size){
-    int x;
-    for (x = 0 ; x < size ; x++){
-        printf("%d ",*(arr+x));
-    }
-}
-void main(){
+int main(){
     int c, size, x;
     printf("Select which algo to use to sort! \n1\tBubble\n2\tQuick\n3\tMerge\n4\tHeap\n5\tInsertion\n6\tSelection\nInput: ");
     scanf("%d",&c);
@@ -70,16 +62,18 @@ void main(){
     switch(c){
         case 1 : bubble(arr,size);
         break;
-        case 2 : quick(arr,size);
+        case 2 : 
         break;
         case 3 :
         break;
         case 4 :
         break;
-        case 5 :
+        case 5 : insertion(arr,size);
         break;
         case 6 : selection(arr,size);
         break;
     }
     display(arr,size);
+    free(arr);
+    return 0;
 }
