@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!--Stylesheet import-->
+    <link rel="stylesheet" href="style.css">
+    <!--Page title-->
+    <title>the unnamed coffee - news page</title>
+</head>
+<body>
+    <!--Header Nav Bar-->
+    <div id="header" class="main_nav">
+        <!--Name-->
+        <div class="title">
+            <a class="title1">THE</a>
+            <div>
+                <a class="title2">UNNAMED</a>
+                <a class="title2">COFFEE</a>
+            </div>
+        </div>
+        <!--Links-->
+        <div>
+            <ul class="nav_links">
+                <li><a  href="index.php">Home</a></li>
+                <li><a  href="services.php">Services</a></li>
+                <li><a  href="store.php">Store</a></li>
+                <li><a  class="current" href="News Page.php">News</a></li>
+                <li><a  href="about_us.php">About</a></li>
+            </ul>
+        </div>
+        <!--Button-->
+        <div>
+            <input type="button" value="Contact Us" class="contact_button">
+        </div>
+    </div>
+    <!--Body-->
+    <div class="column_body">
+        <div class="column_elements">
+            <img src="src/Campus_TechnicalArea-01.jpg" alt="adrian">
+            <h1 class="newshead">Inside the New Simonelli Group Campus in Central Italy</h1>
+            <h2>Industry | Howard Bryman | February 8, 2023</h2>
+            <blockquote>
+                Simonelli Group, the Italian parent company of commercial espresso equipment brands Nuova Simonelli and Victoria Arduino, has cut the ribbon on the new Simonelli Group Campus n Belforte del Chienti,…
+            </blockquote>
+        </div>
+        <div class="column_elements">
+            <img src="src/Coffee-Breath-show-2.jpg" alt="ramie">
+            <h1 class="newshead">New Docuseries 'Coffee Breath' Gives Life to Coffee Stories to Coffee Stories</h1>
+            <h2>Columns | Nick Brown | February 8, 2023</h2>
+            <blockquote>
+                Focused on coffee businesses and the stories of the impassioned people behind them, a new video sercies called Coffee Breath is flowing into production. Coffee Breath was created by former...
+            </blockquote>
+        </div>
+        <div class="column_elements">
+            <img src="src/ACI-L1-class-2022-5-720x380.jpg" alt="stanlee">
+            <h1 class="newshead">ASEAN COFFEE INSTITUTE LAUNCHES BARISTA CLASS LEVEL 1 IN THE PHILIPPINES</h1>
+            <h2>Posted on December 26, 2022 by gquetulio</h2>
+            <blockquote>
+                The ASEAN Coffee Institute (ACI) Barista Class Level 1 opened for the first time in the Philippines last Dec. 15-16 at the UCC Coffee academy.Commune owner Ros Juan, Trainer Vanessa Caceres, and Assistant Trainer Adrian Bersaba aligned standards for the OJT run the attendees.
+            </blockquote>
+        </div>
+    </div>
+</body>
+</html>
