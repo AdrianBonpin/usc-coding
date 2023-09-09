@@ -1,2 +1,0 @@
-# usc-coding
-Lenovo Branch
