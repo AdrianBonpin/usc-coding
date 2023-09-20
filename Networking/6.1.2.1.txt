@@ -1,0 +1,198 @@
+# R1 #
+
+en
+conf t
+ipv6 unicast-routing
+hostname R1
+banner motd $ R1 - UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+ip routing
+
+int g0/1
+ip add 178.11.240.242 255.255.255.252
+no shut
+
+int g0/0
+ipv6 enable
+no shut
+
+int g0/0.10
+encap dot1Q 10
+ip add 178.11.240.225 255.255.255.240
+ip helper-address 178.11.240.241
+ipv6 enable
+ipv6 add 2001:DB8:ACAD:10::1/64
+
+int g0/0.15
+encap dot1Q 15
+ip add 178.11.240.161 255.255.255.224
+ip helper-address 178.11.240.241
+ipv6 enable
+ipv6 add 2001:DB8:ACAD:11::1/64
+
+int g0/0.20
+encap dot1Q 20
+ip add 178.11.240.65 255.255.255.192
+ip helper-address 178.11.240.241
+ipv6 enable
+ipv6 add 2001:DB8:ACAD:12::1/64
+
+int g0/0.25
+encap dot1Q 25
+ip add 178.11.240.1 255.255.255.192
+ip helper-address 178.11.240.241
+ipv6 enable
+ipv6 add 2001:DB8:ACAD:13::1/64
+
+int g0/0.30
+encap dot1Q 30
+ip add 178.11.240.193 255.255.255.224
+ip helper-address 178.11.240.241
+ipv6 enable
+ipv6 add 2001:DB8:ACAD:14::1/64
+
+int g0/0.35
+encap dot1Q 35
+ip add 178.11.240.129 255.255.255.224
+ip helper-address 178.11.240.241
+ipv6 enable
+ipv6 add 2001:DB8:ACAD:15::1/64
+
+# S1 - Server #
+
+en
+conf t
+ipv6 unicast-routing
+hostname S1
+banner motd $ S1 - UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode server
+
+vlan 10
+vlan 15
+vlan 20
+vlan 25
+vlan 30
+vlan 35
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 10
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 20
+
+int ra fa0/22-24
+channel-group 1 mode active
+
+int ra fa0/20-21
+channel-group 2 mode on
+
+int ra G0/1-2
+channel-group 3 mode desirable
+
+int port-channel 1
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int port-channel 2
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int port-channel 3
+sw mo trunk
+sw trunk all vlan 1-1000
+
+# S2 - Client #
+
+en
+conf t
+ipv6 unicast-routing
+hostname S2
+banner motd $ S2 - UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode client
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 10
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 20
+
+int ra fa0/22-24
+channel-group 1 mode active
+
+int ra fa0/20-21
+channel-group 2 mode on
+
+int ra G0/1-2
+channel-group 3 mode desirable
+
+# S3 - Client #
+
+en
+conf t
+ipv6 unicast-routing
+hostname S3
+banner motd $ S3 - UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode client
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 10
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 20
+
+int ra fa0/22-24
+channel-group 1 mode active
+
+int ra fa0/20-21
+channel-group 2 mode on
+
+int ra G0/1-2
+channel-group 3 mode desirable
+
+int po 2
+sw mo trunk
+sw trunk all vlan 1-1000
