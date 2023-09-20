@@ -1,0 +1,151 @@
+# R1 #
+
+en
+conf t
+ipv6 unicast-routing
+hostname R1
+
+ip routing
+
+int g0/0
+no shut
+
+int g0/0.100
+encap dot1Q 100
+ipv6 add 2000:DB8:ACAD:10::1/64
+
+int g0/0.200
+encap dot1Q 200
+ipv6 add 2000:DB8:ACAD:20::1/64
+
+# S1 - Server #
+
+en
+conf t
+ipv6 unicast-routing
+hostname MainSw
+banner motd $ MainSw - UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain dcism.domain
+vtp mode server
+
+vlan 100 name Accounting
+vlan 200 name Cashier
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 100
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 200
+
+int ra fa0/22-24
+channel-group 1 mode active
+
+int ra fa0/20-21
+channel-group 2 mode on
+
+int ra fa0/18-19
+channel-group 3 mode desirable
+
+int g0/1
+sw mo trunk
+sw trunk all 1-1000
+
+int port-channel 1
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int port-channel 2
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int port-channel 3
+sw mo trunk
+sw trunk all vlan 1-1000
+
+
+
+
+# S2 - Client #
+
+en
+conf t
+ipv6 unicast-routing
+hostname S2
+banner motd $ S2 - UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode client
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 10
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 20
+
+int ra fa0/22-24
+channel-group 1 mode active
+
+int ra fa0/20-21
+channel-group 2 mode on
+
+int ra G0/1-2
+channel-group 3 mode desirable
+
+# S3 - Client #
+
+en
+conf t
+ipv6 unicast-routing
+hostname S3
+banner motd $ S3 - UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode client
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 10
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 20
+
+int ra fa0/22-24
+channel-group 1 mode active
+
+int ra fa0/20-21
+channel-group 2 mode on
+
+int ra G0/1-2
+channel-group 3 mode desirable
+
+int po 2
+sw mo trunk
+sw trunk all vlan 1-1000
