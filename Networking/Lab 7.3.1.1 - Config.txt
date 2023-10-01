@@ -1,0 +1,300 @@
+~ PLDT Router ~
+en
+conf t
+hostname PLDT_Router
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+ip route 0.0.0.0 0.0.0.0 10.10.10.1
+
+int g0/0
+no shut
+ip add 10.10.10.2 255.255.255.252
+
+int g0/1
+no shut
+ip add 10.10.20.1 255.255.255.252
+
+~ Edge Router ~
+en
+conf t
+hostname Edge_Router
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+ip route 0.0.0.0 0.0.0.0 10.10.10.2
+ip route 0.0.0.0 0.0.0.0 10.10.1.2
+ip route 0.0.0.0 0.0.0.0 10.10.2.2
+
+int g0/0
+ip add 10.10.10.1 255.255.255.252
+no shut
+
+int se0/0/0
+ip add 10.10.2.1 255.255.255.252
+no shut
+
+int se0/0/1
+ip add 10.10.1.1 255.255.255.252
+no shut
+
+~ Main Router ~
+en
+conf t
+hostname Main_Router
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+ip routing
+ip route 0.0.0.0 0.0.0.0 10.10.1.1
+ip route 0.0.0.0 0.0.0.0 10.10.3.2
+
+int se0/0/0
+no shut
+ip add 10.10.1.2 255.255.255.252
+
+int se0/0/1
+no shut
+ip add 10.10.3.1 255.255.255.252
+
+int g0/0
+no shut
+
+int g0/0.100
+encap dot1Q 100
+ip add 172.18.227.130 255.255.255.128
+ip helper-address 10.10.20.2
+standby 1 ip 172.18.227.129
+standby 1 priority 105
+standby 1 preempt
+standby 1 track se0/0/0
+
+int g0/0.200
+encap dot1Q 200
+ip add 172.18.231.2 255.255.255.128
+ip helper-address 10.10.20.2
+standby 1 ip 172.18.231.1
+standby 1 priority 105
+standby 1 preempt
+standby 1 track se0/0/0
+
+int g0/0.300
+encap dot1Q 300
+ip add 172.18.233.130 255.255.255.128
+ip helper-address 10.10.20.2
+standby 1 ip 172.18.233.129
+standby 1 priority 105
+standby 1 preempt
+standby 1 track se0/0/0
+
+~ BackUp Router ~
+en
+conf t
+hostname BackUp_Router
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+ip routing
+ip route 0.0.0.0 0.0.0.0 10.10.2.1
+ip route 0.0.0.0 0.0.0.0 10.10.3.1
+
+int se0/0/0
+no shut
+ip add 10.10.3.2 255.255.255.252
+
+int se0/0/1
+no shut
+ip add 10.10.2.2 255.255.255.252
+
+int g0/0
+no shut
+
+int g0/0.100
+encap dot1Q 100
+ip add 172.18.227.131 255.255.255.128
+ip helper-address 10.10.20.2
+standby 1 ip 172.18.227.129
+standby 1 preempt
+
+int g0/0.200
+encap dot1Q 200
+ip add 172.18.231.3 255.255.255.128
+ip helper-address 10.10.20.2
+standby 1 ip 172.18.231.1
+standby 1 preempt
+
+int g0/0.300
+encap dot1Q 300
+ip add 172.18.233.131 255.255.255.128
+ip helper-address 10.10.20.2
+standby 1 ip 172.18.233.129
+standby 1 preempt
+
+~ S1 - Server ~
+en
+conf t
+hostname S1
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode server
+
+vlan 100
+vlan 200
+vlan 300
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 100
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 200
+
+int ra fa0/11-15
+sw mo acc
+sw acc vlan 300
+
+int ra fa0/24
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int ra g0/1-2
+sw trunk encap dot1q
+sw mo trunk
+sw trunk all vlan 1-1000
+
+~ F1 - Client ~
+en
+conf t
+hostname F1
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode client
+
+vlan 100
+vlan 200
+vlan 300
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 100
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 200
+
+int ra fa0/11-15
+sw mo acc
+sw acc vlan 300
+
+int ra fa0/24
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int ra g0/1-2
+sw mo trunk
+sw trunk all vlan 1-1000
+
+~ F2 - Client ~
+en
+conf t
+hostname F2
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode client
+
+vlan 100
+vlan 200
+vlan 300
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 100
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 200
+
+int ra fa0/11-15
+sw mo acc
+sw acc vlan 300
+
+int ra fa0/24
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int ra g0/1-2
+sw mo trunk
+sw trunk all vlan 1-1000
+
+~ F3 - Client ~
+en
+conf t
+hostname F3
+
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+vtp domain cisco.com
+vtp mode client
+
+vlan 100
+vlan 200
+vlan 300
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 100
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 200
+
+int ra fa0/11-15
+sw mo acc
+sw acc vlan 300
+
+int ra fa0/24
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int ra g0/1-2
+sw mo trunk
+sw trunk all vlan 1-1000
