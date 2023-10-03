@@ -1,0 +1,220 @@
+~ Edge Router ~
+
+en
+conf t
+hostname Edge
+ipv6 unicast-routing
+
+ip dhcp pool Acctg
+network 178.3.229.0 255.255.255.0
+default-router 178.3.229.1
+ip dhcp pool Cashier
+network 178.3.228.0 255.255.255.0
+default-router 178.3.228.1
+
+ip dhcp excluded-address 178.3.229.2 178.3.229.3
+ip dhcp excluded-address 178.3.228.2 178.3.228.3
+
+ip routing
+ip route 0.0.0.0 0.0.0.0 10.10.10.2
+ip route 0.0.0.0 0.0.0.0 11.11.11.2
+
+int g0/0
+ip add 10.10.10.1 255.255.255.252
+no shut
+
+int g0/1
+ip add 11.11.11.1 255.255.255.252
+no shut
+
+~ Main Router ~
+
+en
+conf t
+hostname Main
+ipv6 unicast-routing
+
+ip routing
+ip route 0.0.0.0 0.0.0.0 10.10.10.1
+
+int g0/0
+ip add 10.10.10.2 255.255.255.252
+no shut
+
+ipv6 dhcp pool DHCP_Other
+!dns-server 2001:db3:acad:c::2/64
+domain-name dcism.com
+
+int g0/1
+no shut
+
+int g0/1.10
+encap dot1q 10
+ip add 178.3.229.2 255.255.255.0
+ip helper-address 10.10.10.1
+
+ipv6 add 2001:db3:acad:a::1/64
+ipv6 add fe80::1 link-local
+ipv6 add autoconfig
+ipv6 dhcp server DHCP_Other
+ipv6 nd other-config-flag
+
+standby 1 ip 178.3.229.1
+standby 1 priority 105
+standby 1 preempt
+standby 1 track g0/0
+
+int g0/1.20
+encap dot1q 20
+ip add 178.3.228.2 255.255.255.0
+ip helper-address 10.10.10.1
+
+ipv6 add 2001:db3:acad:b::1/64
+ipv6 add fe80::2 link-local
+ipv6 add autoconfig
+ipv6 dhcp server DHCP_Other
+ipv6 nd other-config-flag
+
+standby 1 ip 178.3.228.1
+standby 1 priority 105
+standby 1 preempt
+standby 1 track g0/0
+
+~ Backup Router ~
+
+en
+conf t
+hostname Backup
+ipv6 unicast-routing
+
+ip routing
+ip route 0.0.0.0 0.0.0.0 11.11.11.1
+
+int g0/0
+ip add 11.11.11.2 255.255.255.252
+no shut
+
+ipv6 dhcp pool DHCP_Other
+!dns-server 2001:db3:acad:c::2/64
+domain-name dcism.com
+
+int g0/1
+no shut
+
+int g0/1.10
+encap dot1q 10
+ip add 178.3.229.3 255.255.255.0
+ip helper-address 10.10.10.1
+
+ipv6 add 2001:db3:acad:a::1/64
+ipv6 add fe80::1 link-local
+ipv6 add autoconfig
+ipv6 dhcp server DHCP_Other
+ipv6 nd other-config-flag
+
+standby 1 ip 178.3.229.1
+standby 1 preempt
+
+int g0/1.20
+encap dot1q 20
+ip add 178.3.228.3 255.255.255.0
+ip helper-address 10.10.10.1
+
+ipv6 add 2001:db3:acad:b::1/64
+ipv6 add fe80::2 link-local
+ipv6 add autoconfig
+ipv6 dhcp server DHCP_Other
+ipv6 nd other-config-flag
+
+standby 1 ip 178.3.228.1
+standby 1 preempt
+
+~ Main SW ~
+
+en
+conf t
+host Main_SW
+
+vtp domain cisco.com
+vtp mode server
+
+vlan 10
+name Acctg
+vlan 20
+name Registrar
+
+int ra g0/1-2
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int ra fa0/21-22
+channel-group 1 mode active
+
+int ra fa0/23-24
+channel-group 2 mode auto
+
+int vlan1
+ip add 178.3.226.1 255.255.255.0
+
+int po 1
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int po 2
+sw mo trunk
+sw trunk all vlan 1-1000
+
+~ PaGP SW ~
+
+en
+conf t
+host PaGP_SW
+
+vtp domain cisco.com
+vtp mode client
+
+int ra fa0/23-24
+channel-group 2 mode desirable
+
+int po 2
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int vlan1
+ip add 178.3.226.2 255.255.255.0
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 10
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 20
+
+~ LACP SW ~
+
+en
+conf t
+ipv6 unicast-routing
+hostname LACP_SW
+
+vtp domain cisco.com
+vtp mode client
+
+int ra fa0/21-22
+channel-group 1 mode passive
+
+int po 1
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int vlan1
+ip add 178.3.226.3 255.255.255.0
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 10
+
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 20
