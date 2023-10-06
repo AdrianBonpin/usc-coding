@@ -12,14 +12,23 @@ void initSet(SET *s) {
     }
 }
 
+int member(SET s, int element) {
+    if (element >= 0 && element < SET_SIZE) {
+        int byteIndex = element / 8;
+        int bitIndex = element % 8;
+        return (s.set[byteIndex] & (1 << bitIndex)) != 0;
+    }
+    return 0; // False
+}
+
 void displaySet(SET s) {
-    printf("Set elements: {");
+    printf("\n");
     for (int i = 0; i < SET_SIZE; i++) {
         if (member(s, i)) {
-            printf("%d, ", i);
+            printf("%d ", i);
         }
     }
-    printf("}\n");
+    printf("\n\n");
 }
 
 void insert(SET *s, int element) {
@@ -28,15 +37,6 @@ void insert(SET *s, int element) {
         int bitIndex = element % 8;
         s->set[byteIndex] |= (1 << bitIndex);
     }
-}
-
-int member(SET s, int element) {
-    if (element >= 0 && element < SET_SIZE) {
-        int byteIndex = element / 8;
-        int bitIndex = element % 8;
-        return (s.set[byteIndex] & (1 << bitIndex)) != 0;
-    }
-    return 0; // False
 }
 
 void delete(SET *s, int element) {
