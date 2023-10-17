@@ -1,0 +1,30 @@
+import React, { useEffect, useState } from 'react';
+
+function WeatherApp() {
+  const [weatherData, setWeatherData] = useState('Fetching weather information...');
+  const location = 'New+York'; // You can replace this with any location you prefer
+
+  useEffect(() => {
+    // Construct the URL for wttr.in with your desired location
+    const weatherUrl = `https://wttr.in/${location}?format=%C+%t+%w+%m`;
+
+    // Fetch the weather data from wttr.in
+    fetch(weatherUrl)
+      .then((response) => response.text())
+      .then((data) => {
+        setWeatherData(`Current Weather: ${data}`);
+      })
+      .catch((error) => {
+        setWeatherData(`Error fetching weather data: ${error}`);
+      });
+  }, []);
+
+  return (
+    <div>
+      <h1>Current Weather</h1>
+      <p>{weatherData}</p>
+    </div>
+  );
+}
+
+export default WeatherApp;
