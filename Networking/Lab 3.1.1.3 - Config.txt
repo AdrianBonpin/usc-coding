@@ -1,0 +1,46 @@
+# Company Switch #
+
+en
+conf t
+hostname Company_Switch
+banner motd $UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+
+int vlan 1
+ip add 172.17.0.1 255.255.255.0
+no shut
+
+vlan 100
+name Admin
+vlan 200
+name HR
+vlan 300
+name Production
+vlan 99
+name Mgt&Native
+
+int ra fa0/5-10
+switchport mode access
+switchport access vlan 100
+no shut
+int ra fa0/11-15
+switchport mode access
+switchport access vlan 200
+no shut
+int ra fa0/16-20
+switchport mode access
+switchport access vlan 300
+no shut
+int ra fa0/21-24
+switchport mode access
+switchport access vlan 99
+no shut

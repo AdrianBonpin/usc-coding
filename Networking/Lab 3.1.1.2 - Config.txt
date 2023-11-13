@@ -1,0 +1,58 @@
+# MainSw #
+
+en
+conf t
+hostname MainSw
+banner motd $UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+
+int vlan 1
+ip add 192.168.0.1 255.255.255.248
+no shut
+
+vlan 10
+name Mgmt
+vlan 20
+name Finance
+vlan 30
+name Sales
+vlan 40
+name HR
+vlan 99
+name NetAd
+vlan 50
+name GenVis
+
+int ra fa0/1-5
+switchport mode access
+switchport access vlan 10
+no shut
+int ra fa0/6-10
+switchport mode access
+switchport access vlan 20
+no shut
+int ra fa0/11-15
+switchport mode access
+switchport access vlan 30
+no shut
+int ra fa0/16-20
+switchport mode access
+switchport access vlan 40
+no shut
+int ra fa0/23-24
+switchport mode access
+switchport access vlan 99
+no shut
+int ra fa0/21-22
+switchport mode access
+switchport access vlan 50
+no shut

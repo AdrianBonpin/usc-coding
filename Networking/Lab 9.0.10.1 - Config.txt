@@ -1,0 +1,199 @@
+~ R1 Local ~
+en
+conf t
+hostname R1_Local
+
+ip domain-name netacad.pka
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+ip routing
+
+router rip
+version 2
+network 192.168.1.0
+network 10.1.1.0
+no auto-summary
+redistribute static
+
+int se0/1/0
+ip add 10.1.1.1 255.255.255.252
+no shut
+
+int g0/0
+ip add 192.168.1.1 255.255.255.0
+no shut
+
+~ R2 Tacacs+ ~
+en
+conf t
+hostname R2_TACACS
+
+ip domain-name netacad.pka
+crypto key generate rsa gen mod 2048
+
+tacacs-server host 192.168.2.2 key tacacsPass
+
+aaa new-model
+aaa authen login default group tacacs
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+ip routing
+
+router rip
+version 2
+network 192.168.2.0
+network 10.3.3.0
+network 10.2.2.0
+network 10.1.1.0
+no auto-summary
+redistribute static
+
+int se0/1/0
+ip add 10.1.1.2 255.255.255.252
+no shut
+
+int se0/1/1
+ip add 10.2.2.1 255.255.255.252
+no shut
+
+int g0/1
+ip add 10.3.3.1 255.255.255.252
+no shut
+
+int g0/0
+ip add 192.168.2.1 255.255.255.0
+no shut
+
+~ R3 RADIUS ~
+en
+conf t
+hostname R3_RADIUS
+
+ip domain-name netacad.pka
+crypto key generate rsa gen mod 2048
+
+aaa new-model
+aaa authen login default group radius
+
+radius server radServ
+address ipv4 192.168.3.2 auth-port 1645
+key radiusPass
+exit
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+ip routing
+
+router rip
+version 2
+network 192.168.3.0
+network 10.2.2.0
+no auto-summary
+redistribute static
+
+int se0/1/0
+ip add 10.2.2.2 255.255.255.252
+no shut
+
+int g0/0
+ip add 192.168.3.1 255.255.255.0
+no shut
+
+~ Main Router ~
+en
+conf t
+hostname Main_Router
+
+ip domain-name netacad.pka
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+ip routing
+
+router rip
+version 2
+network 10.10.10.0
+network 10.3.3.0
+no auto-summary
+redistribute static
+
+int se0/1/0
+ip add 10.10.10.1 255.255.255.252
+no shut
+
+int g0/0
+ip add 10.3.3.2 255.255.255.252
+no shut
+
+~ ISP ~
+en
+conf t
+hostname ISP
+
+ip domain-name netacad.pka
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+ip routing
+
+router rip
+version 2
+network 10.10.10.0
+network 172.16.10.0
+no auto-summary
+redistribute static
+
+int se0/1/0
+ip add 10.10.10.2 255.255.255.252
+no shut
+
+int g0/0
+ip add 172.16.10.1 255.255.255.0
+no shut
