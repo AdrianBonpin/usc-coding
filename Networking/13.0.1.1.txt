@@ -1,0 +1,29 @@
+~ ISP ~
+en
+conf t
+hostname ISP
+
+ip route 0.0.0.0 0.0.0.0 10.1.1.2
+
+int se0/0/0
+ip add 10.1.1.1 255.255.255.252
+no shut
+
+int g0/0
+ip add 8.8.8.1 255.255.255.0
+no shut
+
+~ R1 ~
+en
+conf t
+hostname R1
+
+ip route 0.0.0.0 0.0.0.0 10.1.1.1
+
+int se0/0/0
+ip add 10.1.1.2 255.255.255.252
+no shut
+
+int g0/0
+ip add 192.15.240.1 255.255.255.0
+no shut
