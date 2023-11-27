@@ -1,0 +1,88 @@
+~ R1 ~
+en
+conf t
+hostname R1
+
+ac 103 deny tcp host 198.15.224.67 any
+ac 103 permit tcp any any
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+access-class 103 in
+exit
+
+router ospf 1
+router-id 1.1.1.1
+network 198.15.224.0 0.0.0.63 area 1
+network 198.15.224.64 0.0.0.63 area 2
+network 198.15.224.128 0.0.0.3 area 0
+exit
+
+ip dhcp pool R1
+network 198.15.224.0 255.255.255.192
+default-router 198.15.224.1
+ip dhcp pool R2
+network 198.15.224.64 255.255.255.192
+default-router 198.15.224.65
+
+int g0/0
+ip add 198.15.224.1 255.255.255.192
+no shut
+
+int se0/0/0
+ip add 198.15.224.129 255.255.255.252
+no shut
+
+~ R2 ~
+en
+conf t
+hostname R2
+
+ac 101 deny icmp host 198.15.224.2 host 198.15.224.66
+ac 101 permit icmp any any
+ac 102 deny tcp host 198.15.224.67 any
+ac 102 permit tcp any any
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+access-class 102 in
+exit
+
+router ospf 1
+router-id 2.2.2.2
+network 198.15.224.0 0.0.0.63 area 1
+network 198.15.224.64 0.0.0.63 area 2
+network 198.15.224.128 0.0.0.3 area 0
+exit
+
+int g0/0
+ip add 198.15.224.65 255.255.255.192
+ip helper-address 198.15.224.129
+ip access-group 101 out
+no shut
+
+int se0/0/0
+ip add 198.15.224.130 255.255.255.252
+no shut
