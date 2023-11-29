@@ -1,0 +1,119 @@
+# Company Switch Config #
+
+en
+conf t
+hostname Company_Switch
+banner motd $Warning! Access to this device is strictly prohibited!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+login local
+transport input ssh
+exit
+
+username admin secret cisco
+ip domain-name com
+cry key gen rsa
+1024
+ip ssh version 2
+
+int vlan 1
+ip add 192.168.10.1 255.255.255.0
+no shut
+
+int ra fa0/1-24
+sw mo acc
+sw po
+sw po max 2
+sw po mac sticky
+sw po vio res
+
+int ra fa0/1-22
+shut
+
+int ra fa0/23-24
+sw po max 3
+
+# HR Switch Config #
+
+en
+conf t
+hostname HR_Switch
+banner motd $Warning! Access to this device is strictly prohibited!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+login local
+transport input ssh
+exit
+
+username admin secret cisco
+ip domain-name com
+cry key gen rsa
+1024
+ip ssh version 2
+
+int vlan 1
+ip add 192.168.10.2 255.255.255.0
+no shut
+
+int ra fa0/1-24
+sw mo acc
+sw po
+sw po max 2
+sw po mac sticky
+sw po vio res
+
+int ra fa0/3-23
+shut
+
+int fa0/24
+sw po max 3
+
+# Mktg Switch Config #
+
+en
+conf t
+hostname Mktg_Switch
+banner motd $Warning! Access to this device is strictly prohibited!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+login local
+transport input ssh
+exit
+
+username admin secret cisco
+ip domain-name com
+cry key gen rsa
+1024
+ip ssh version 2
+
+int vlan 1
+ip add 192.168.10.3 255.255.255.0
+no shut
+
+int ra fa0/1-24
+sw mo acc
+sw po
+sw po max 2
+sw po mac sticky
+sw po vio res
+
+int ra fa0/3-23
+shut
+
+int fa0/24
+sw po max 3

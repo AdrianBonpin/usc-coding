@@ -1,0 +1,299 @@
+~ XYZ_Router ~
+en
+conf t
+hostname XYZ_Router
+
+ip domain-name xyz.com
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 172.16.128.0 0.0.15.255
+network 12.0.10.136 0.0.0.3
+exit
+
+ip route 0.0.0.0 0.0.0.0 12.0.10.138
+
+int se0/0/0
+ip add 12.0.10.137 255.255.255.252
+no shut
+
+int fa0/0
+ip add 172.16.128.33 255.255.255.252
+no shut
+
+int e1/0
+ip add 172.16.128.1 255.255.255.248
+ip helper-address 172.16.128.34
+no shut
+
+int e1/1
+ip add 172.16.128.9 255.255.255.248
+ip helper-address 172.16.128.34
+no shut
+
+int e1/2
+ip add 172.16.128.17 255.255.255.248
+ip helper-address 172.16.128.34
+no shut
+
+int e1/3
+ip add 172.16.128.25 255.255.255.248
+ip helper-address 172.16.128.34
+no shut
+
+~ ABC_Router ~
+en
+conf t
+hostname ABC_Router
+
+ip domain-name abc.com
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 189.220.192.0 0.0.7.255
+network 12.0.10.128 0.0.0.3
+exit
+
+ip route 0.0.0.0 0.0.0.0 12.0.10.130
+
+int se0/0/0
+ip add 12.0.10.129 255.255.255.252
+no shut
+
+int fa0/0
+ip add 189.220.192.25 255.255.255.252
+no shut
+
+int e1/0
+ip add 189.220.192.1 255.255.255.248
+ip helper-address 189.220.192.26
+no shut
+
+int e1/1
+ip add 189.220.192.9 255.255.255.248
+ip helper-address 189.220.192.26
+no shut
+
+int e1/2
+ip add 189.220.192.17 255.255.255.248
+ip helper-address 189.220.192.26
+no shut
+
+~ PLDT ~
+en
+conf t
+hostname PLDT
+
+ip domain-name pldt.com
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 12.0.10.128 0.0.0.3
+network 12.0.10.132 0.0.0.3
+network 12.0.10.136 0.0.0.3
+exit
+
+ip route 0.0.0.0 0.0.0.0 12.0.10.129
+ip route 0.0.0.0 0.0.0.0 12.0.10.134
+ip route 0.0.0.0 0.0.0.0 12.0.10.137
+
+int se0/0/0
+ip add 12.0.10.138 255.255.255.252
+no shut
+
+int se0/0/1
+ip add 12.0.10.130 255.255.255.252
+no shut
+
+int se0/1/0
+ip add 12.0.10.133 255.255.255.252
+no shut
+
+~ AT&T ~
+en
+conf t
+hostname ATT
+
+ip domain-name att.com
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 12.0.10.132 0.0.0.3
+network 22.80.10.240 0.0.0.3
+network 22.80.10.244 0.0.0.3
+network 22.80.10.248 0.0.0.3
+exit
+
+ip route 0.0.0.0 0.0.0.0 12.0.10.133
+ip route 0.0.0.0 0.0.0.0 22.80.10.240
+ip route 0.0.0.0 0.0.0.0 22.80.10.244
+ip route 0.0.0.0 0.0.0.0 22.80.10.248
+
+int se0/0/0
+ip add 12.0.10.134 255.255.255.252
+no shut
+
+int se0/0/1
+ip add 22.80.10.241 255.255.255.252
+no shut
+
+int se0/1/0
+ip add 22.80.10.245 255.255.255.252
+no shut
+
+int se0/1/1
+ip add 22.80.10.249 255.255.255.252
+no shut
+
+~ R1 ~
+en
+conf t
+hostname R1
+
+ip domain-name google.com
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 22.80.10.240 0.0.0.3
+network 11.15.0.1 0.0.0.127
+exit
+
+ip route 0.0.0.0 0.0.0.0 22.80.10.241
+
+int se0/0/0
+ip add 22.80.10.242 255.255.255.252
+no shut
+
+int g0/0
+ip add 11.15.0.1 255.255.255.128
+no shut
+
+~ R2 ~
+en
+conf t
+hostname R2
+
+ip domain-name yahoo.com
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 22.80.10.244 0.0.0.3
+network 200.160.224.0 0.0.0.127
+exit
+
+ip route 0.0.0.0 0.0.0.0 22.80.10.245
+
+int se0/0/0
+ip add 22.80.10.246 255.255.255.252
+no shut
+
+int g0/0
+ip add 200.160.224.1 255.255.255.128
+no shut
+
+~ R3 ~
+en
+conf t
+hostname R3
+
+ip domain-name facebook.com
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 22.80.10.248 0.0.0.3
+network 18.11.215.192 0.0.0.15
+exit
+
+ip route 0.0.0.0 0.0.0.0 22.80.10.245
+
+int se0/0/0
+ip add 22.80.10.250 255.255.255.252
+no shut
+
+int g0/0
+ip add 18.11.215.193 255.255.255.128
+no shut

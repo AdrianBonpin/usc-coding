@@ -1,0 +1,286 @@
+# Bunzel Router #
+
+en
+conf t
+hostname Bunzel_Router
+banner motd $UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+ip route 0.0.0.0 0.0.0.0 192.11.224.210
+ip routing
+
+int vlan 1
+ip add 192.168.1.1 255.255.255.0
+no shut
+
+int g0/0
+no shut
+int g0/0.10
+encapsulation dot1q 10
+ip add 192.11.224.161 255.255.255.240
+ip helper-address 192.11.224.213
+int g0/0.20
+encapsulation dot1q 20
+ip add 192.11.224.177 255.255.255.240
+ip helper-address 192.11.224.213
+
+int g0/1
+ip add 192.11.224.214 255.255.255.252
+no shut
+
+
+int g0/2
+ip add 192.11.224.209 255.255.255.252
+no shut
+
+# BSw1 CONIFG #
+
+en
+conf t
+hostname BSw1
+banner motd $Warning! Access to this device might kill you!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+int vlan 1
+ip add 192.168.1.2 255.255.255.0
+no shut
+
+vlan 10
+name Accounting
+vlan 20
+name Cashier
+
+int fa0/23
+sw mode trunk
+sw trunk all vlan 10,20
+int fa0/24
+sw mode trunk
+sw trunk all vlan 10,20
+int g0/1
+sw mo trunk
+
+# BSw2 CONIFG #
+
+en
+conf t
+hostname BSw2
+banner motd $Warning! Access to this device might kill you!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+int vlan 1
+ip add 192.168.1.3 255.255.255.0
+no shut
+
+vlan 10
+name Accounting
+vlan 20
+name Cashier
+
+int ra fa0/1-10
+sw mo acc
+sw acc vlan 10
+int ra fa0/11-20
+sw mo acc
+sw acc vlan 20
+
+# BSw3 CONIFG #
+
+en
+conf t
+hostname BSw3
+banner motd $Warning! Access to this device might kill you!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+int vlan 1
+ip add 192.168.1.4 255.255.255.0
+no shut
+
+vlan 10
+name Accounting
+vlan 20
+name Cashier
+
+int ra fa0/1-10
+sw mo acc
+sw acc vlan 10
+int ra fa0/11-20
+sw mo acc
+sw acc vlan 20
+
+# SMED Router #
+
+en
+conf t
+hostname SMED_Router
+banner motd $UNAUTHORIZED ACCESS IS STRICTLY PROHIBITED!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+ip route 0.0.0.0 0.0.0.0 192.11.224.209
+ip routing
+
+int vlan 1
+ip add 192.168.1.5 255.255.255.0
+no shut
+
+int g0/0
+no shut
+int g0/0.20
+encapsulation dot1q 20
+ip add 192.11.224.193 255.255.255.240
+ip helper-address 192.11.224.213
+int g0/0.100
+encapsulation dot1q 100
+ip add 192.11.224.1 255.255.255.128
+int g0/0.200
+encapsulation dot1q 200
+ip add 192.11.224.129 255.255.255.224
+
+int g0/2
+ip add 192.11.224.210 255.255.255.252
+no shut
+
+ip dhcp excluded-address 192.11.224.1 192.11.224.1
+ip dhcp excluded-address 192.11.224.129 192.11.224.129
+
+ip dhcp pool VLAN100
+network 192.11.224.0 255.255.255.128
+default-router 192.11.224.1
+ip dhcp pool VLAN200
+network 192.11.224.128 255.255.255.224
+default-router 192.11.224.129
+
+# SSw1 CONIFG #
+
+en
+conf t
+hostname SSw1
+banner motd $Warning! Access to this device might kill you!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+int vlan 1
+ip add 192.168.1.6 255.255.255.0
+no shut
+
+
+vlan 20
+name Cashier
+vlan 100
+name Laboratory
+vlan 200
+name Office
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 100
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 200
+int ra fa0/11-20
+sw mo acc
+sw acc vlan 20
+
+int g0/1
+sw mo trunk
+int g0/2
+sw mode trunk
+sw trunk all vlan 20,100,200
+
+# SSw2 CONIFG #
+
+en
+conf t
+hostname SSw2
+banner motd $Warning! Access to this device might kill you!!$
+enable secret cisco
+service password-encryption
+
+line con 0
+password cisco
+login
+line vty 0 4
+transport input telnet
+password cisco
+login
+exit
+
+int vlan 1
+ip add 192.168.1.7 255.255.255.0
+no shut
+
+
+vlan 20
+name Cashier
+vlan 100
+name Laboratory
+vlan 200
+name Office
+
+int ra fa0/1-5
+sw mo acc
+sw acc vlan 100
+int ra fa0/6-10
+sw mo acc
+sw acc vlan 200
+int ra fa0/11-20
+sw mo acc
+sw acc vlan 20
