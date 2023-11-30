@@ -1,0 +1,130 @@
+~ Initial Config w/SSH Telnet ~
+
+en
+conf t
+ipv6 unicast-routing
+hostname <name>
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+~ STATIC ~
+
+ip route 0.0.0.0 0.0.0.0 <nxthop>
+
+ipv6 route ::/0 <nxthop>
+
+~ RIP ~
+
+router rip
+version 2
+network <address>
+no auto-summary
+redistribute static
+
+ipv6 router rip <name>
+redistribute static
+
+'inside interface'
+ipv6 rip <name> enable
+
+~ OSPF ~
+
+router ospf <num>
+router-id 
+network <ip> <wc> area <area>
+redistribute eigrp <eigrp> subnets
+exit
+
+~ EIGRP ~
+
+router eigrp <num>
+router-id 
+network <ip> <wc>
+redistribute ospf <ospf> metric
+exit
+
+~ Port Security ~
+
+sw po
+sw po max <num>
+sw po mac sticky
+sw po vio res
+
+~ VTP ~
+
+vtp domain <domain>
+vtp mode server/client
+
+~ EtherChannel ~
+
+LACP
+| Passive | Active | Good |
+| Active | Active | Good |
+
+PaGP
+| Auto | Desirable | Good |
+
+channel-group <num> mode <link>
+
+int po <num>
+sw mo trunk
+sw trunk all vlan 1-1000
+
+~ HSRP ~
+
+standby <num> ip <loip>
+standby <num> prio 105
+standby <num> preempt
+standby <num> track <int>
+
+~ IPv4 DHCP ~
+
+ip dhpc pool <name>
+network <add> <msk>
+default-router <ip>
+
+ip dhcp excluded-address <start> <end>
+
+~ IPv6 DHCP ~
+
+ipv6 dhcp pool <name>
+prefix-delegation <prefix>
+dns-server <dns>
+domain-name <domain>
+
+'inside interface'
+ipv6 dhcp server <name>
+ipv6 nd other-config-flag
+
+~ Sub-interface ~
+
+int <int>.<vlan>
+encap dot1q <vlan>
+
+~ ACL ~
+
+'standard'
+ac <num> <action> <target> <wc>
+
+ex.
+ac 1 deny 198.15.224.64 0.0.0.63
+ac 103 deny tcp host 198.15.224.67 any
+
+'vty'
+access-class <num> in
+
+'interface'
+ip access-group <num> out
