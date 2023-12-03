@@ -1,0 +1,512 @@
+== VLANS ==
+vlan 10
+name JAVA
+vlan 20
+name OFFICE
+vlan 30
+name WEB
+vlan 40
+name GUEST
+vlan 50
+name MGMT
+vlan 100
+name VOICE
+
+== ABC Edge ==
+
+en
+conf t
+hostname ABC_Router
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 1.1.1.0 0.0.0.3
+network 10.10.10.0 0.0.0.3
+network 172.22.0.0 0.0.0.7
+exit
+
+int fa0/0
+ip add 1.1.1.1 255.255.255.252
+no shut
+
+int fa0/1
+no shut
+
+int fa0/1.100
+encap dot1q 100
+ip add 172.22.0.1 255.255.255.248
+
+int se0/0/0
+ip add 10.10.10.2 255.255.255.252
+no shut
+
+ip dhcp pool VOICE_ABC
+network 172.22.0.0 255.255.255.248
+default-router 172.22.0.1
+option 150 ip 172.22.0.1
+
+tele
+max-dn 10
+max-ep 10
+ip source-add 172.22.0.1 port 2000
+auto assign 4 to 6
+auto assign 1 to 5
+
+ephone-dn 1
+num 101
+
+ephone-dn 2
+num 102
+
+di vo 100 voip
+se ta ipv4:10.10.11.2
+de 20.
+
+
+!end
+
+== XYZ Edge ==
+
+en
+conf t
+hostname XYZ_Router
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 2.2.2.0 0.0.0.3
+network 10.10.11.0 0.0.0.3
+network 172.22.0.8 0.0.0.7
+exit
+
+int fa0/0
+ip add 2.2.2.1 255.255.255.252
+no shut
+
+int fa0/1
+no shut
+
+int fa0/1.100
+encap dot1q 100
+ip add 172.22.0.9 255.255.255.248
+
+int se0/0/0
+ip add 10.10.11.2 255.255.255.252
+no shut
+
+ip dhcp pool VOICE_ABC
+network 172.22.0.8 255.255.255.248
+default-router 172.22.0.9
+option 150 ip 172.22.0.9
+
+tele
+max-dn 10
+max-ep 10
+ip source-add 172.22.0.9 port 2000
+auto assign 4 to 6
+auto assign 1 to 5
+
+ephone-dn 1
+num 201
+
+ephone-dn 2
+num 202
+
+di vo 100 voip
+se ta ipv4:10.10.10.2
+de 10.
+
+!end
+
+== ABC Router ==
+
+en
+conf t
+hostname ABC_Router
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 1.1.1.0 0.0.0.3
+network 198.11.224.0 0.0.0.15
+network 198.11.224.16 0.0.0.15
+network 198.11.224.32 0.0.0.15
+network 198.11.224.48 0.0.0.15
+network 198.11.224.64 0.0.0.15
+network 198.11.224.80 0.0.0.3
+exit
+
+int g0/0
+ip add 1.1.1.2 255.255.255.252
+no shut
+
+int g0/1
+ip add 198.11.224.81 255.255.255.252
+no shut
+
+int g0/2
+no shut
+int g0/2.10
+encap dot1q 10
+ip add 198.11.224.33 255.255.255.240
+ip helper-address 198.11.224.82
+int g0/2.20
+encap dot1q 20
+ip add 198.11.224.65 255.255.255.240
+ip helper-address 198.11.224.82
+int g0/2.30
+encap dot1q 30
+ip add 198.11.224.49 255.255.255.240
+ip helper-address 198.11.224.82
+int g0/2.40
+encap dot1q 40
+ip add 198.11.224.17 255.255.255.240
+ip helper-address 198.11.224.82
+int g0/2.50
+encap dot1q 50 native
+ip add 198.11.224.1 255.255.255.240
+ip helper-address 198.11.224.82
+
+!end
+
+
+== XYZ Router ==
+
+en
+conf t
+hostname XYZ_Router
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 2.2.2.0 0.0.0.3
+network 198.12.224.0 0.0.0.15
+network 198.12.224.16 0.0.0.15
+network 198.12.224.32 0.0.0.15
+network 198.12.224.48 0.0.0.15
+network 198.12.224.64 0.0.0.15
+network 198.12.224.80 0.0.0.3
+exit
+
+int g0/0
+ip add 2.2.2.2 255.255.255.252
+no shut
+
+int g0/1
+ip add 198.12.224.81 255.255.255.252
+no shut
+
+int g0/2
+no shut
+int g0/2.10
+encap dot1q 10
+ip add 198.12.224.17 255.255.255.240
+ip helper-address 198.12.224.82
+int g0/2.20
+encap dot1q 20
+ip add 198.12.224.49 255.255.255.240
+ip helper-address 198.12.224.82
+int g0/2.30
+encap dot1q 30
+ip add 198.12.224.65 255.255.255.240
+ip helper-address 198.12.224.82
+int g0/2.40
+encap dot1q 40
+ip add 198.12.224.1 255.255.255.240
+ip helper-address 198.12.224.82
+int g0/2.50
+encap dot1q 50 native
+ip add 198.12.224.33 255.255.255.240
+ip helper-address 198.12.224.82
+
+!end
+
+== ABC Switch ==
+
+en
+conf t
+hostname ABC_Switch
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+vtp domain adrian.bonpin
+vtp mode server
+
+vlan 10
+name JAVA
+vlan 20
+name OFFICE
+vlan 30
+name WEB
+vlan 40
+name GUEST
+vlan 50
+name MGMT
+
+int g0/1
+sw mo trunk
+sw trunk native vlan 50
+
+int ra fa0/1-5
+sw mo trunk
+sw trunk native vlan 50
+
+== XYZ Switch ==
+
+en
+conf t
+hostname XYZ_Switch
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+vtp domain adrian.bonpin
+vtp mode server
+
+vlan 10
+name JAVA
+vlan 20
+name OFFICE
+vlan 30
+name WEB
+vlan 40
+name GUEST
+vlan 50
+name MGMT
+
+int g0/1
+sw mo trunk
+sw trunk native vlan 50
+
+int ra fa0/1-5
+sw mo trunk
+sw trunk native vlan 50
+
+
+== ABC Phone ==
+
+en
+conf t
+hostname ABC_Phone
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+vtp domain adrian.bonpin
+vtp mode server
+
+vlan 100
+name VOICE
+
+int fa0/1
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int ra fa0/2-3
+sw voice vlan 100
+
+int ra fa0/4-24
+shut
+
+!end
+
+
+== XYZ Phone ==
+
+en
+conf t
+hostname XYZ_Phone
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+vtp domain adrian.bonpin
+vtp mode server
+
+vlan 100
+name VOICE
+
+int fa0/1
+sw mo trunk
+sw trunk all vlan 1-1000
+
+int ra fa0/2-3
+sw voice vlan 100
+
+int ra fa0/4-24
+shut
+
+!end
+
+== PLDT ISP ==
+
+en
+conf t
+hostname PLDT_ISP
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 10.10.10.0 0.0.0.3
+network 10.10.11.0 0.0.0.3
+network 11.11.11.0 0.0.0.3
+exit
+
+int se0/0/0
+ip add 10.10.10.1 255.255.255.252
+no shut
+int se0/0/1
+ip add 10.10.11.1 255.255.255.252
+no shut
+int se0/1/0
+ip add 11.11.11.1 255.255.255.252
+no shut
+
+== Google ==
+
+en
+conf t
+hostname Google
+
+ip domain-name adrian.bonpin
+crypto key generate rsa gen mod 2048
+username admin1 secret admin1pa55
+
+aaa new-model
+aaa authen login default local
+
+line con 0
+login authen default
+
+line vty 0 4
+transport input all
+login authen default
+exit
+
+router eigrp 1
+network 8.8.8.0 0.0.0.15
+network 11.11.11.0 0.0.0.3
+exit
+
+int se0/0/0
+ip add 11.11.11.2 255.255.255.252
+no shut
+
+int g0/0
+ip add 8.8.8.1 255.255.255.240
+no shut
